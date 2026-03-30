@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FormaPro — Catalogue des formations</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 24px 16px;
+            flex-shrink: 0;
+        }
+        .sidebar-logo {
+            color: #1D9E75;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 32px;
+        }
+        .sidebar-lien {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .sidebar-lien:hover, .sidebar-lien.actif {
+            background-color: #e8f7f2;
+            color: #1D9E75;
+        }
+
+        /* === CONTENU === */
+        .contenu {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* === TOPBAR === */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .topbar h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        /* === BARRE DE RECHERCHE === */
+        .barre-recherche {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            align-items: center;
+        }
+        .barre-recherche input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+        }
+        .barre-recherche input:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
+        .barre-recherche select {
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #555;
+            background-color: white;
+            cursor: pointer;
+        }
+        .barre-recherche select:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
+
+        /* === GRILLE DE FORMATIONS === */
+        .grille-formations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* === CARTE FORMATION === */
+        .carte-formation {
+            background-color: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .carte-formation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+        .carte-icone {
+            width: 44px;
+            height: 44px;
+            background-color: #e8f7f2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        .carte-titre {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .carte-description {
+            font-size: 13px;
+            color: #777;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .carte-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #999;
+        }
+        .carte-duree {
+            background-color: #f0f4f8;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #555;
+        }
+        .btn-demander {
+            width: 100%;
+            padding: 10px;
+            background-color: #1D9E75;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            margin-top: 4px;
+        }
+        .btn-demander:hover {
+            background-color: #0F6E56;
+        }
+        .btn-demander.desactive {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* === BADGE SESSIONS === */
+        .badge-sessions {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #D4EDDA;
+            color: #155724;
+        }
+        .badge-sessions.aucune {
+            background-color: #F8D7DA;
+            color: #721c24;
+        }
+
+        /* === VIDE === */
+        .vide {
+            text-align: center;
+            padding: 60px 0;
+            color: #aaa;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body class="page-dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">🎓 FormaPro</div>
+        <a href="/dashboard" class="sidebar-lien">🏠 Tableau de bord</a>
+        <a href="/catalogue" class="sidebar-lien actif">📚 Catalogue</a>
+        <a href="/mes-demandes" class="sidebar-lien">📋 Mes demandes</a>
+        <a href="/logout" class="sidebar-lien">🚪 Déconnexion</a>
+    </aside>
+
+    <!-- CONTENU -->
+    <main class="contenu">
+        <div class="topbar">
+            <h2>Catalogue des formations</h2>
+            <!-- Bug 4 corrigé : employe n'a pas de champ prenom, seulement nom -->
+            <span style="font-size:14px; color:#888;">Bonjour, <strong th:text="${employe.nom}">Erica Touré</strong></span>
+        </div>
+
+        <!-- BARRE DE RECHERCHE -->
+        <form method="GET" th:action="@{/catalogue}" class="barre-recherche">
+            <input
+                type="text"
+                name="recherche"
+                placeholder="Rechercher une formation..."
+                th:value="${recherche}"
+            />
+            <select name="categorie">
+                <option value="">Toutes catégories</option>
+                <option value="informatique" th:selected="${categorie == 'informatique'}">Informatique</option>
+                <option value="langue" th:selected="${categorie == 'langue'}">Langue</option>
+                <option value="management" th:selected="${categorie == 'management'}">Management</option>
+            </select>
+            <button type="submit" class="btn-demander" style="width:auto; padding:10px 20px; margin:0;">Filtrer</button>
+        </form>
+
+        <!-- GRILLE DES FORMATIONS (données Thymeleaf) -->
+        <div class="grille-formations" th:if="${not #lists.isEmpty(formations)}">
+            <div class="carte-formation" th:each="formation : ${formations}">
+                <!-- Bug 3 corrigé : icone n'existe pas dans l'entité, on met une icône fixe -->
+                <div class="carte-icone">📘</div>
+                <div class="carte-titre" th:text="${formation.titre}">Java Spring Boot</div>
+                <div class="carte-description" th:text="${formation.description}">
+                    Apprenez à construire des applications web robustes avec Java et Spring Boot.
+                </div>
+                <div class="carte-meta">
+                    <span class="carte-duree">⏱ <span th:text="${formation.dureeJours}">5</span> jours</span>
+                    <!-- Bug 2 corrigé : utiliser la Map nbSessionsParFormation passée par le contrôleur -->
+                    <span
+                        class="badge-sessions"
+                        th:classappend="${nbSessionsParFormation[formation.id] > 0 ? '' : ' aucune'}"
+                        th:text="${nbSessionsParFormation[formation.id] > 0 ? nbSessionsParFormation[formation.id] + ' session(s)' : 'Aucune session'}">
+                        2 session(s)
+                    </span>
+                </div>
+                <!-- Lien vers le formulaire de demande -->
+                <!-- Si aucune session : lien désactivé (href=#), sinon lien normal -->
+                <a
+                    th:href="${nbSessionsParFormation[formation.id] > 0 ? '/demande/new?formationId=' + formation.id : '#'}"
+                    class="btn-demander"
+                    th:classappend="${nbSessionsParFormation[formation.id] == 0 ? ' desactive' : ''}">
+                    Faire une demande
+                </a>
+            </div>
+        </div>
+
+        <!-- MESSAGE SI AUCUNE FORMATION -->
+        <div class="vide" th:if="${#lists.isEmpty(formations)}">
+            <p>😕 Aucune formation trouvée pour cette recherche.</p>
+        </div>
+
+        <!-- =====================================================
+             DONNEES STATIQUES POUR MAQUETTE/DEMO
+             Supprimer ce bloc quand Thymeleaf est branché
+        ====================================================== -->
+        <!--
+        <div class="grille-formations">
+            <div class="carte-formation">
+                <div class="carte-icone">☕</div>
+                <div class="carte-titre">Java Spring Boot</div>
+                <div class="carte-description">Construire des apps web robustes avec Java et Spring Boot. Architecture MVC, REST, JPA.</div>
+                <div class="carte-meta">
+                    <span class="carte-duree">⏱ 5 jours</span>
+                    <span class="badge-sessions">2 session(s)</span>
+                </div>
+                <a href="/demande/new?formationId=1" class="btn-demander">Faire une demande</a>
+            </div>
+            <div class="carte-formation">
+                <div class="carte-icone">🐍</div>
+                <div class="carte-titre">Python Data Science</div>
+                <div class="carte-description">Analyse de données, visualisation et machine learning avec Python et ses librairies.</div>
+                <div class="carte-meta">
+                    <span class="carte-duree">⏱ 4 jours</span>
+                    <span class="badge-sessions">1 session(s)</span>
+                </div>
+                <a href="/demande/new?formationId=2" class="btn-demander">Faire une demande</a>
+            </div>
+            <div class="carte-formation">
+                <div class="carte-icone">🌐</div>
+                <div class="carte-titre">Anglais Professionnel</div>
+                <div class="carte-description">Communication en anglais en contexte professionnel : réunions, emails, présentations.</div>
+                <div class="carte-meta">
+                    <span class="carte-duree">⏱ 3 jours</span>
+                    <span class="badge-sessions aucune">Aucune session</span>
+                </div>
+                <a href="#" class="btn-demander desactive">Faire une demande</a>
+            </div>
+        </div>
+        -->
+
+    </main>
+
+</body>
+</html>

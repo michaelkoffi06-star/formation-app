@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Évaluation Formation</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f6f8; }
+
+        header {
+            background: #1a237e;
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 1.4rem; }
+        header a { color: #90caf9; text-decoration: none; font-size: 0.9rem; }
+
+        .container { max-width: 600px; margin: 40px auto; padding: 0 20px; }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        h2 { color: #1a237e; }
+        .btn-retour {
+            background: #e3e8f0;
+            color: #1a237e;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: #e8eaf6;
+            border-left: 4px solid #1a237e;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 28px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 6px;
+            font-size: 0.9rem;
+        }
+
+        /* Étoiles */
+        .stars { display: flex; gap: 6px; }
+        .stars input[type="radio"] { display: none; }
+        .stars label {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ccc;
+            font-weight: normal;
+            margin: 0;
+        }
+        .stars input[type="radio"]:checked ~ label,
+        .stars label:hover,
+        .stars label:hover ~ label { color: #ccc; }
+        .stars input[type="radio"]:checked + label,
+        .stars label:hover { color: #f9a825; }
+
+        /* Fix direction pour les étoiles */
+        .stars { flex-direction: row-reverse; justify-content: flex-end; }
+        .stars label:hover,
+        .stars label:hover ~ label { color: #f9a825; }
+
+        textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 100px;
+        }
+        textarea:focus { outline: none; border-color: #1a237e; }
+
+        input[type="file"] {
+            border: 2px dashed #bbb;
+            border-radius: 6px;
+            padding: 12px;
+            width: 100%;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        input[type="file"]:hover { border-color: #1a237e; }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-submit:hover { background: #283593; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>FormaPro — Évaluation</h1>
+    <a href="/logout">Se déconnecter</a>
+</header>
+
+<div class="container">
+    <div class="top">
+        <h2>Évaluation de formation</h2>
+        <a href="/responsable/demandes" class="btn-retour">← Retour</a>
+    </div>
+
+    <!-- Infos sur la demande concernée -->
+    <div class="info-box">
+        <strong>Employé :</strong> <span th:text="${demande.employe.nom}">Nom</span> &nbsp;|&nbsp;
+        <strong>Formation :</strong> <span th:text="${demande.formation.titre}">Titre</span>
+    </div>
+
+    <div class="card">
+        <form th:action="@{/responsable/evaluation}" method="post" enctype="multipart/form-data">
+
+            <!-- Champ caché : id de la demande -->
+            <input type="hidden" name="demandeId" th:value="${demande.id}" />
+
+            <!-- Note en étoiles -->
+            <div class="form-group">
+                <label>Note</label>
+                <div class="stars">
+                    <input type="radio" id="star5" name="note" value="5" required />
+                    <label for="star5" title="5 étoiles">★</label>
+                    <input type="radio" id="star4" name="note" value="4" />
+                    <label for="star4" title="4 étoiles">★</label>
+                    <input type="radio" id="star3" name="note" value="3" />
+                    <label for="star3" title="3 étoiles">★</label>
+                    <input type="radio" id="star2" name="note" value="2" />
+                    <label for="star2" title="2 étoiles">★</label>
+                    <input type="radio" id="star1" name="note" value="1" />
+                    <label for="star1" title="1 étoile">★</label>
+                </div>
+            </div>
+
+            <!-- Commentaire -->
+            <div class="form-group">
+                <label for="commentaire">Commentaire</label>
+                <textarea id="commentaire" name="commentaire"
+                          placeholder="Votre retour sur la formation..."></textarea>
+            </div>
+
+            <!-- Upload fichier (attestation) -->
+            <div class="form-group">
+                <label for="fichier">Attestation / Fichier (optionnel)</label>
+                <input type="file" id="fichier" name="fichier"
+                       accept=".pdf,.jpg,.jpeg,.png,.docx" />
+            </div>
+
+            <button type="submit" class="btn-submit">✔ Soumettre l'évaluation</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

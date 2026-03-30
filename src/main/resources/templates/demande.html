@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation Nouvelle demande</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        /* === SIDEBAR === */
+        .sidebar {
+            width: 200px;
+            height: 100vh;
+            background-color: white;
+            border-right: 1px solid #eee;
+            padding: 24px 16px;
+            flex-shrink: 0;
+        }
+        .sidebar-logo {
+            color: #1D9E75;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 32px;
+        }
+        .sidebar-lien {
+            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #555;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .sidebar-lien:hover, .sidebar-lien.actif {
+            background-color: #e8f7f2;
+            color: #1D9E75;
+        }
+
+        /* === CONTENU === */
+        .contenu {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        /* === TOPBAR === */
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        .topbar h2 {
+            font-size: 20px;
+            color: #333;
+        }
+        .btn-retour {
+            padding: 8px 16px;
+            background-color: transparent;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn-retour:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* === CARTE FORMULAIRE === */
+        .carte-formulaire {
+            background-color: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 640px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        /* === RECAP FORMATION === */
+        .recap-formation {
+            background-color: #e8f7f2;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .recap-icone {
+            font-size: 28px;
+        }
+        .recap-titre {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1D9E75;
+        }
+        .recap-meta {
+            font-size: 13px;
+            color: #555;
+            margin-top: 2px;
+        }
+
+        /* === LABELS & INPUTS === */
+        label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 6px;
+            margin-top: 20px;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* === CHAMP CACHÉ (hidden input pour Thymeleaf) === */
+        input[type="hidden"] {}
+
+        /* === MESSAGE D'ERREUR === */
+        .erreur {
+            background-color: #F8D7DA;
+            color: #721c24;
+            border: 1px solid #F5C6CB;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* === MESSAGE SUCCÈS === */
+        .succes {
+            background-color: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        /* === BOUTON SUBMIT === */
+        .btn-soumettre {
+            width: 100%;
+            padding: 12px;
+            background-color: #1D9E75;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+            margin-top: 28px;
+        }
+        .btn-soumettre:hover {
+            background-color: #0F6E56;
+        }
+
+        /* === AIDE SOUS LE CHAMP === */
+        .aide {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body class="page-dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-logo">🎓 Formation</div>
+        <a href="/dashboard" class="sidebar-lien">🏠 Tableau de bord</a>
+        <a href="/catalogue" class="sidebar-lien">📚 Catalogue</a>
+        <a href="/mes-demandes" class="sidebar-lien">📋 Mes demandes</a>
+        <a href="/logout" class="sidebar-lien">🚪 Déconnexion</a>
+    </aside>
+
+    <!-- CONTENU -->
+    <main class="contenu">
+        <div class="topbar">
+            <h2>Nouvelle demande de formation</h2>
+            <a href="/catalogue" class="btn-retour">← Retour au catalogue</a>
+        </div>
+
+        <div class="carte-formulaire">
+
+            <!-- MESSAGE ERREUR (affiché si Thymeleaf détecte une erreur) -->
+            <div class="erreur" th:if="${erreur}" th:text="${erreur}">
+                Une erreur est survenue.
+            </div>
+
+            <!-- MESSAGE SUCCÈS -->
+            <div class="succes" th:if="${succes}" th:text="${succes}">
+                Demande envoyée avec succès !
+            </div>
+
+            <!-- RÉCAP DE LA FORMATION CHOISIE -->
+            <div class="recap-formation">
+                <div class="recap-icone">📘</div>
+                <div>
+                    <div class="recap-titre" th:text="${formation.titre}">Java Spring Boot</div>
+                    <div class="recap-meta">
+                        ⏱ <span th:text="${formation.dureeJours}">5</span> jours
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULAIRE -->
+            <form method="POST" th:action="@{/demande/soumettre}">
+
+                <!-- Champ caché : ID de la formation -->
+                <input type="hidden" name="formationId" th:value="${formation.id}" />
+
+                <!-- CHOIX DE LA SESSION -->
+                <label for="sessionId">Session souhaitée *</label>
+                <select id="sessionId" name="sessionId" required>
+                    <option value="">-- Choisir une session --</option>
+                    <option
+                        th:each="sess : ${sessions}"
+                        th:value="${sess.id}"
+                        th:text="${sess.dateDebut + ' → ' + sess.dateFin}">
+                        01/06/2025 → 05/06/2025
+                    </option>
+                </select>
+                <p class="aide">Choisissez la session qui correspond à vos disponibilités.</p>
+
+                <!-- COMMENTAIRE / JUSTIFICATION -->
+                <label for="commentaire">Justification (optionnel)</label>
+                <textarea
+                    id="commentaire"
+                    name="commentaire"
+                    placeholder="Expliquez pourquoi vous souhaitez suivre cette formation...">
+                </textarea>
+                <p class="aide">Votre responsable lira ce message avant de valider votre demande.</p>
+
+                <!-- BOUTON SOUMETTRE -->
+                <button type="submit" class="btn-soumettre">✅ Envoyer la demande</button>
+
+            </form>
+
+        </div>
+
+        <!-- =====================================================
+             DONNEES STATIQUES POUR MAQUETTE/DEMO
+             Supprimer ce bloc quand Thymeleaf est branché
+        ====================================================== -->
+        <!--
+        <div class="carte-formulaire">
+            <div class="recap-formation">
+                <div class="recap-icone">☕</div>
+                <div>
+                    <div class="recap-titre">Java Spring Boot</div>
+                    <div class="recap-meta">⏱ 5 jours &nbsp;•&nbsp; 2 session(s) disponible(s)</div>
+                </div>
+            </div>
+            <form>
+                <label for="sessionId">Session souhaitée *</label>
+                <select id="sessionId">
+                    <option value="">-- Choisir une session --</option>
+                    <option value="1">01/06/2025 → 05/06/2025</option>
+                    <option value="2">15/07/2025 → 19/07/2025</option>
+                </select>
+                <p class="aide">Choisissez la session qui correspond à vos disponibilités.</p>
+                <label for="commentaire">Justification (optionnel)</label>
+                <textarea id="commentaire" placeholder="Expliquez pourquoi vous souhaitez cette formation..."></textarea>
+                <p class="aide">Votre responsable lira ce message avant de valider.</p>
+                <button type="submit" class="btn-soumettre">✅ Envoyer la demande</button>
+            </form>
+        </div>
+        -->
+
+    </main>
+
+</body>
+</html>

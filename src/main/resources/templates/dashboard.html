@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Formation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="page-dashboard">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-logo">● Formation</div>
+        <nav>
+            <a class="sidebar-lien actif" href="/dashboard">Accueil</a>
+            <a class="sidebar-lien" href="/catalogue">Catalogue</a>
+            <a class="sidebar-lien" href="/mes-demandes">Mes demandes</a>
+            <a class="sidebar-lien" href="/logout">Déconnexion</a>
+        </nav>
+    </div>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div class="contenu">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <h2>Bonjour, <span th:text="${employe.nom}">Employé</span></h2>
+            <a href="/catalogue">
+                <button class="btn-nouvelle-demande">+ Nouvelle demande</button>
+            </a>
+        </div>
+
+        <!-- STATISTIQUES -->
+        <div class="stats-grille">
+            <div class="stat-carte">
+                <div class="stat-nombre" th:text="${total}">0</div>
+                <div class="stat-label">Demandes totales</div>
+            </div>
+            <div class="stat-carte">
+                <div class="stat-nombre" th:text="${acceptees}">0</div>
+                <div class="stat-label">Acceptées</div>
+            </div>
+            <div class="stat-carte">
+                <div class="stat-nombre" th:text="${enAttente}">0</div>
+                <div class="stat-label">En attente</div>
+            </div>
+            <div class="stat-carte">
+                <div class="stat-nombre" th:text="${refusees}">0</div>
+                <div class="stat-label">Refusées</div>
+            </div>
+        </div>
+
+        <!-- TABLEAU DES DEMANDES -->
+        <div class="tableau-carte">
+            <h3>Mes demandes</h3>
+            <table class="tableau">
+                <thead>
+                    <tr>
+                        <th>Formation</th>
+                        <th>Durée</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="demande : ${demandes}">
+                        <td th:text="${demande.formation.titre}">Formation</td>
+                        <td th:text="${demande.formation.dureeJours} + ' jours'">0 jours</td>
+                        <td>
+                            <span class="badge attente"
+                                  th:if="${demande.statut.name() == 'EN_ATTENTE'}">
+                                En attente
+                            </span>
+                            <span class="badge acceptee"
+                                  th:if="${demande.statut.name() == 'ACCEPTEE'}">
+                                Acceptée
+                            </span>
+                            <span class="badge refusee"
+                                  th:if="${demande.statut.name() == 'REFUSEE'}">
+                                Refusée
+                            </span>
+                        </td>
+                        <td>
+                            <a th:if="${demande.statut.name() == 'ACCEPTEE'}"
+                               href="/mes-demandes">
+                                <button class="btn-voir">Voir sessions</button>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

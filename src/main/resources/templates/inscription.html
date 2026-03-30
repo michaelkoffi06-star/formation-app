@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription Formation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="carte">
+    <div class="logo"><h2>🎓 FormaPro</h2></div>
+    <h1>Créer un compte</h1>
+
+    <div class="erreur" th:if="${erreur}" th:text="${erreur}"></div>
+    <div class="succes" th:if="${succes}" th:text="${succes}" style="background:#D4EDDA;color:#155724;border:1px solid #C3E6CB;border-radius:8px;padding:10px 14px;margin-bottom:16px;font-size:13px;text-align:center;"></div>
+
+    <form action="/inscription" method="post">
+        <label>Nom complet</label>
+        <input type="text" name="nom" placeholder="Votre nom" required>
+
+        <label>Adresse email</label>
+        <input type="email" name="email" placeholder="votre@email.com" required>
+
+        <label>Mot de passe</label>
+        <input type="password" name="motDePasse" placeholder="••••••••" required>
+
+        <br>
+        <button class="btn-connexion" type="submit">Créer mon compte</button>
+    </form>
+
+    <p style="margin-top:16px; font-size:13px; text-align:center;">
+        Déjà un compte ? <a href="/" style="color:#1D9E75;">Se connecter</a>
+    </p>
+</div>
+
+</body>
+</html>

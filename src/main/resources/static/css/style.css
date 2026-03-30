@@ -1,0 +1,327 @@
+/* === STYLE GLOBAL === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* === CARTE DE CONNEXION === */
+.carte {
+    background-color: white;
+    padding: 40px;
+    border-radius: 12px;
+    width: 400px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* === LOGO === */
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo h2 {
+    color: #1D9E75;
+    font-size: 24px;
+}
+
+/* === TITRE === */
+h1 {
+    text-align: center;
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 24px;
+}
+
+/* === LABELS === */
+label {
+    display: block;
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 6px;
+    margin-top: 16px;
+}
+
+/* === CHAMPS DE SAISIE === */
+input[type="email"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    outline: none;
+    border-color: #1D9E75;
+}
+
+/* === BOUTONS RADIO (RÔLE) === */
+.role-groupe {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.role-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+}
+
+.role-btn.actif {
+    border-color: #1D9E75;
+    background-color: #e8f7f2;
+    color: #1D9E75;
+    font-weight: bold;
+}
+
+/* === BOUTON CONNEXION === */
+.btn-connexion {
+    width: 100%;
+    padding: 12px;
+    background-color: #1D9E75;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+    margin-top: 24px;
+}
+
+.btn-connexion:hover {
+    background-color: #0F6E56;
+}
+
+/* === LAYOUT DASHBOARD === */
+body.page-dashboard {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 100vh;
+    background-color: #f0f4f8;
+}
+
+/* === SIDEBAR === */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: white;
+    border-right: 1px solid #eee;
+    padding: 24px 16px;
+    flex-shrink: 0;
+}
+
+.sidebar-logo {
+    color: #1D9E75;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 32px;
+}
+
+.sidebar-lien {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.sidebar-lien:hover,
+.sidebar-lien.actif {
+    background-color: #e8f7f2;
+    color: #1D9E75;
+}
+
+/* === CONTENU PRINCIPAL === */
+.contenu {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* === TOPBAR === */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.topbar h2 {
+    font-size: 20px;
+    color: #333;
+}
+
+.btn-nouvelle-demande {
+    padding: 10px 18px;
+    background-color: #1D9E75;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.btn-nouvelle-demande:hover {
+    background-color: #0F6E56;
+}
+
+/* === STATISTIQUES === */
+.stats-grille {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.stat-carte {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+.stat-nombre {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1D9E75;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* === TABLEAU === */
+.tableau-carte {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.tableau-carte h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 16px;
+}
+
+.tableau {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.tableau thead tr {
+    background-color: #f8f8f8;
+}
+
+.tableau th {
+    text-align: left;
+    padding: 10px 14px;
+    color: #888;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+.tableau td {
+    padding: 12px 14px;
+    border-top: 1px solid #f0f0f0;
+    color: #333;
+}
+
+/* === BADGES STATUT === */
+.badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.badge.attente {
+    background-color: #FFF3CD;
+    color: #856404;
+}
+
+.badge.acceptee {
+    background-color: #D4EDDA;
+    color: #155724;
+}
+
+.badge.refusee {
+    background-color: #F8D7DA;
+    color: #721c24;
+}
+
+/* === BOUTON VOIR === */
+.btn-voir {
+    padding: 5px 12px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #555;
+}
+
+.btn-voir:hover {
+    background-color: #f0f0f0;
+}
+
+/* === MESSAGE D'ERREUR === */
+.erreur {
+    background-color: #F8D7DA;
+    color: #721c24;
+    border: 1px solid #F5C6CB;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    text-align: center;
+}
+```
+
+Teste en te connectant avec un mauvais mot de passe — tu verras le message rouge apparaître.
+
+---
+
+## ✅ Chose 2 — Informations pour P2 et P3
+
+Voici exactement ce que tu dois envoyer à tes coéquipiers :
+```
+=== INFOS BASE DE DONNÉES ===
+Hôte      : 192.168.122.240
+Port      : 3306
+Base      : formation_db
+Utilisateur : formation_user
+Mot de passe : formation123
+
+=== COMPTES DE TEST ===
+Employé      : erica@test.com / 1234
+Employé      : soro@test.com / 1234
+Responsable  : michael@test.com / 1234
+
+=== LANCER LE PROJET ===
+Port : 8081
+URL  : http://localhost:8081

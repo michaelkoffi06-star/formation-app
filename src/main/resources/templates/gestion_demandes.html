@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des Demandes Formation</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f6f8; }
+
+        header {
+            background: #1a237e;
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 { font-size: 1.4rem; }
+        header a { color: #90caf9; text-decoration: none; font-size: 0.9rem; }
+
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        h2 { color: #1a237e; }
+        .btn-retour {
+            background: #e3e8f0;
+            color: #1a237e;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+        thead { background: #1a237e; color: white; }
+        th, td { padding: 14px 16px; text-align: left; font-size: 0.9rem; }
+        tr:not(:last-child) td { border-bottom: 1px solid #eee; }
+        tr:hover td { background: #f9f9ff; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: bold;
+        }
+        .badge.EN_ATTENTE { background: #fff3e0; color: #e65100; }
+        .badge.ACCEPTEE   { background: #e8f5e9; color: #2e7d32; }
+        .badge.REFUSEE    { background: #ffebee; color: #c62828; }
+
+        .actions-cell { display: flex; gap: 8px; flex-wrap: wrap; }
+
+        form { display: inline; }
+        .btn-accepter, .btn-refuser, .btn-evaluer {
+            border: none;
+            padding: 7px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-accepter { background: #2e7d32; color: white; }
+        .btn-accepter:hover { background: #388e3c; }
+        .btn-refuser  { background: #c62828; color: white; }
+        .btn-refuser:hover  { background: #d32f2f; }
+        .btn-evaluer  { background: #1565c0; color: white; }
+        .btn-evaluer:hover  { background: #1976d2; }
+
+        .vide { text-align: center; padding: 40px; color: #888; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Formation Gestion des Demandes</h1>
+    <a href="/logout">Se déconnecter</a>
+</header>
+
+<div class="container">
+    <div class="top">
+        <h2>Toutes les demandes</h2>
+        <a href="/responsable/dashboard" class="btn-retour">← Dashboard</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Employé</th>
+                <th>Formation</th>
+                <th>Justification</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Cas : aucune demande -->
+            <tr th:if="${#lists.isEmpty(demandes)}">
+                <td colspan="6" class="vide">Aucune demande pour le moment.</td>
+            </tr>
+
+            <!-- Boucle sur les demandes -->
+            <tr th:each="d : ${demandes}">
+                <td th:text="${d.id}">1</td>
+                <td th:text="${d.employe.nom}">Nom</td>
+                <td th:text="${d.formation.titre}">Formation</td>
+                <td th:text="${d.justification != null ? d.justification : '—'}">Justif</td>
+                <td>
+                    <span class="badge" th:classappend="${d.statut.name()}" th:text="${d.statut.name() == 'EN_ATTENTE' ? 'En attente' : d.statut.name() == 'ACCEPTEE' ? 'Acceptée' : 'Refusée'}">EN_ATTENTE</span>
+                </td>
+                <td class="actions-cell">
+                    <!-- Accepter (visible si EN_ATTENTE) -->
+                    <form th:if="${d.statut.name() == 'EN_ATTENTE'}"
+                          th:action="@{/responsable/demandes/{id}/accepter(id=${d.id})}" method="post">
+                        <button class="btn-accepter" type="submit">✔ Accepter</button>
+                    </form>
+
+                    <!-- Refuser (visible si EN_ATTENTE) -->
+                    <form th:if="${d.statut.name() == 'EN_ATTENTE'}"
+                          th:action="@{/responsable/demandes/{id}/refuser(id=${d.id})}" method="post">
+                        <button class="btn-refuser" type="submit">✖ Refuser</button>
+                    </form>
+
+                    <!-- Évaluer (visible si ACCEPTEE) -->
+                    <a th:if="${d.statut.name() == 'ACCEPTEE'}"
+                       th:href="@{/responsable/evaluation/{id}(id=${d.id})}"
+                       class="btn-evaluer">📝 Évaluer</a>
+
+                    <!-- Déjà traité -->
+                    <span th:if="${d.statut.name() == 'REFUSEE'}" style="color:#999; font-size:0.85rem;">Refusée</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

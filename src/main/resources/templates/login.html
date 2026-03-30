@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion Formation</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="carte">
+
+    <div class="logo">
+        <h2>● Formation</h2>
+    </div>
+
+    <h1>Connexion</h1>
+
+    <!-- Message d'erreur -->
+    <div class="erreur" th:if="${erreur}" th:text="${erreur}"></div>
+
+    <form action="/login" method="post">
+
+        <label>Adresse email</label>
+        <input type="email" name="email" placeholder="votre@email.com" required>
+
+        <label>Mot de passe</label>
+        <input type="password" name="motDePasse" placeholder="••••••••" required>
+
+        <br>
+        <button class="btn-connexion" type="submit">Se connecter</button>
+
+    </form>
+
+    <p style="margin-top:16px; font-size:13px; text-align:center;">
+        Pas encore de compte ? <a href="/inscription" style="color:#1D9E75;">S'inscrire</a>
+    </p>
+
+</div>
+
+</body>
+</html>

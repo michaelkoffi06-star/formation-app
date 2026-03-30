@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formation Détail de la demande</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #f0f4f8; display: flex; height: 100vh; }
+        .sidebar { width: 200px; height: 100vh; background: white; border-right: 1px solid #eee; padding: 24px 16px; flex-shrink: 0; }
+        .sidebar-logo { color: #1D9E75; font-size: 18px; font-weight: bold; margin-bottom: 32px; }
+        .sidebar-lien { display: block; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: #555; font-size: 14px; margin-bottom: 4px; }
+        .sidebar-lien:hover { background-color: #e8f7f2; color: #1D9E75; }
+        .contenu { flex: 1; padding: 24px; overflow-y: auto; }
+        .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .topbar h2 { font-size: 20px; color: #333; }
+        .btn-retour { padding: 8px 16px; background: transparent; border: 1px solid #ddd; border-radius: 8px; font-size: 13px; color: #555; cursor: pointer; text-decoration: none; }
+        .carte { background: white; border-radius: 12px; padding: 32px; max-width: 640px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .ligne { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        .ligne:last-child { border-bottom: none; }
+        .ligne-label { color: #888; }
+        .ligne-valeur { color: #333; font-weight: 500; text-align: right; }
+        .badge { padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+        .badge.attente  { background: #FFF3CD; color: #856404; }
+        .badge.acceptee { background: #D4EDDA; color: #155724; }
+        .badge.refusee  { background: #F8D7DA; color: #721c24; }
+        .bloc-formation { background: #e8f7f2; border-radius: 10px; padding: 16px 20px; margin-bottom: 24px; }
+        .bloc-titre { font-size: 16px; font-weight: bold; color: #1D9E75; }
+        .bloc-meta { font-size: 13px; color: #555; margin-top: 4px; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-logo">🎓 Formation</div>
+        <a href="/dashboard" class="sidebar-lien">🏠 Tableau de bord</a>
+        <a href="/catalogue" class="sidebar-lien">📚 Catalogue</a>
+        <a href="/mes-demandes" class="sidebar-lien">📋 Mes demandes</a>
+        <a href="/logout" class="sidebar-lien">🚪 Déconnexion</a>
+    </aside>
+
+    <main class="contenu">
+        <div class="topbar">
+            <h2>Détail de la demande</h2>
+            <a href="/mes-demandes" class="btn-retour">← Retour</a>
+        </div>
+
+        <div class="carte">
+            <div class="bloc-formation">
+                <div class="bloc-titre" th:text="${demande.formation.titre}">Formation</div>
+                <div class="bloc-meta">⏱ <span th:text="${demande.formation.dureeJours}">5</span> jours &nbsp;•&nbsp; <span th:text="${demande.formation.description}">Description</span></div>
+            </div>
+
+            <div class="ligne">
+                <span class="ligne-label">Employé</span>
+                <span class="ligne-valeur" th:text="${demande.employe.nom}">Nom</span>
+            </div>
+            <div class="ligne">
+                <span class="ligne-label">Date de demande</span>
+                <span class="ligne-valeur" th:text="${demande.dateDemande != null ? #temporals.format(demande.dateDemande, 'dd/MM/yyyy') : '—'}">—</span>
+            </div>
+            <div class="ligne">
+                <span class="ligne-label">Statut</span>
+                <span class="ligne-valeur">
+                    <span class="badge"
+                        th:classappend="${demande.statut.name() == 'EN_ATTENTE' ? 'attente' : demande.statut.name() == 'ACCEPTEE' ? 'acceptee' : 'refusee'}"
+                        th:text="${demande.statut.name() == 'EN_ATTENTE' ? 'En attente' : demande.statut.name() == 'ACCEPTEE' ? 'Acceptée' : 'Refusée'}">
+                    </span>
+                </span>
+            </div>
+            <div class="ligne">
+                <span class="ligne-label">Justification</span>
+                <span class="ligne-valeur" th:text="${demande.justification != null ? demande.justification : '—'}">—</span>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

@@ -33,12 +33,11 @@ public class AdminController {
     @GetMapping("")
     public String afficherAdmin(HttpSession session, Model model,
                                 @RequestParam(required = false) String succes,
-                                @RequestParam(required = false) String erreur) {
+                                @RequestParam(required = false) String erreur,
+                                @RequestParam(required = false) Long newFormationId) {
         if (!estResponsable(session)) return "redirect:/";
 
         List<Formation> formations = formationRepository.findAll();
-
-        // Construire la map formationId -> liste de sessions
         Map<Long, List<com.formation.formation_app.model.Session>> sessionsByFormation = new HashMap<>();
         for (Formation f : formations) {
             sessionsByFormation.put(f.getId(), sessionRepository.findByFormationId(f.getId()));
@@ -49,6 +48,7 @@ public class AdminController {
         model.addAttribute("sessionsByFormation", sessionsByFormation);
         if (succes != null) model.addAttribute("succes", succes);
         if (erreur != null) model.addAttribute("erreur", erreur);
+        if (newFormationId != null) model.addAttribute("newFormationId", newFormationId);
         return "admin";
     }
 
@@ -103,8 +103,8 @@ public class AdminController {
         if (!estResponsable(session)) return "redirect:/";
         Formation f = new Formation();
         f.setTitre(titre); f.setDescription(description); f.setDureeJours(dureeJours);
-        formationRepository.save(f);
-        return "redirect:/responsable/admin?succes=Formation+ajout%C3%A9e";
+        Formation saved = formationRepository.save(f);
+        return "redirect:/responsable/admin?succes=Formation+ajout%C3%A9e+%E2%80%94+ajoutez+maintenant+une+session+ci-dessous&tab=sessions&newFormationId=" + saved.getId();
     }
 
     // ─── SUPPRIMER UNE FORMATION ──────────────────────────────

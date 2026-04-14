@@ -1,4 +1,4 @@
-# 🎓 FormaPro — Système de Gestion des Formations Professionnelles
+# 🎓 FormaPro Système de Gestion des Formations Professionnelles
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](https://adoptium.net)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5-green)](https://spring.io/projects/spring-boot)
